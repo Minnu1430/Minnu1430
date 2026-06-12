@@ -1,8 +1,3 @@
-"""
-Digital Clock - Time Zone Display
-Simple HTML/CSS/JavaScript clock with multiple time zones
-"""
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -282,20 +277,6 @@ Simple HTML/CSS/JavaScript clock with multiple time zones
             left: 0;
         }
 
-        .clock-number {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #667eea;
-        }
-
-        .clock-card.active .clock-number {
-            color: white;
-        }
-
         .settings-panel {
             background: white;
             border-radius: 20px;
@@ -405,15 +386,6 @@ Simple HTML/CSS/JavaScript clock with multiple time zones
             }
         }
 
-        .pulse {
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
         .footer {
             text-align: center;
             color: white;
@@ -443,13 +415,11 @@ Simple HTML/CSS/JavaScript clock with multiple time zones
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <div class="header">
             <h1><i class="fas fa-clock"></i> Digital Clock</h1>
             <p>Multiple Time Zone Display</p>
         </div>
 
-        <!-- Controls -->
         <div class="controls">
             <button class="btn btn-primary" onclick="addNewClock()">
                 <i class="fas fa-plus"></i> Add Time Zone
@@ -465,7 +435,6 @@ Simple HTML/CSS/JavaScript clock with multiple time zones
             </button>
         </div>
 
-        <!-- Settings Panel -->
         <div class="settings-panel">
             <div class="settings-title">
                 <i class="fas fa-cog"></i> Settings
@@ -489,17 +458,14 @@ Simple HTML/CSS/JavaScript clock with multiple time zones
             </div>
         </div>
 
-        <!-- Clocks Grid -->
         <div class="clocks-grid" id="clocksContainer"></div>
 
-        <!-- Footer -->
         <div class="footer">
             <p><i class="fas fa-globe"></i> Real-time clock for all time zones | Last updated: <span id="lastUpdate"></span></p>
         </div>
     </div>
 
     <script>
-        // Configuration
         const TIMEZONES = [
             { name: 'New York', zone: 'America/New_York', country: 'USA' },
             { name: 'London', zone: 'Europe/London', country: 'UK' },
@@ -527,14 +493,12 @@ Simple HTML/CSS/JavaScript clock with multiple time zones
         let timeFormat = '24';
         let showAnalog = false;
 
-        // Initialize
         function init() {
             renderTimezoneList();
             updateAllClocks();
             setInterval(updateAllClocks, 1000);
         }
 
-        // Render timezone list
         function renderTimezoneList() {
             const list = document.getElementById('timezoneList');
             list.innerHTML = TIMEZONES.map(tz => `
@@ -545,7 +509,6 @@ Simple HTML/CSS/JavaScript clock with multiple time zones
             `).join('');
         }
 
-        // Toggle timezone selection
         function toggleTimezone(zone, name, country) {
             const index = selectedTimezones.indexOf(zone);
             if (index > -1) {
@@ -557,7 +520,6 @@ Simple HTML/CSS/JavaScript clock with multiple time zones
             renderClocks();
         }
 
-        // Render clocks
         function renderClocks() {
             const container = document.getElementById('clocksContainer');
             container.innerHTML = selectedTimezones.map((zone, index) => {
@@ -595,7 +557,6 @@ Simple HTML/CSS/JavaScript clock with multiple time zones
             }
         }
 
-        // Initialize analog clocks
         function initAnalogClocks() {
             selectedTimezones.forEach((zone, index) => {
                 const numbersContainer = document.getElementById(`numbers-${index}`);
@@ -611,7 +572,6 @@ Simple HTML/CSS/JavaScript clock with multiple time zones
             });
         }
 
-        // Update all clocks
         function updateAllClocks() {
             selectedTimezones.forEach((zone, index) => {
                 updateClock(zone, index);
@@ -619,7 +579,6 @@ Simple HTML/CSS/JavaScript clock with multiple time zones
             updateLastUpdate();
         }
 
-        // Update single clock
         function updateClock(zone, index) {
             const now = new Date();
             const formatter = new Intl.DateTimeFormat('en-US', {
@@ -640,7 +599,6 @@ Simple HTML/CSS/JavaScript clock with multiple time zones
                 timeParts[part.type] = part.value;
             });
 
-            // Format time
             let time = `${timeParts.hour}:${timeParts.minute}:${timeParts.second}`;
             if (timeFormat === '12') {
                 const hours = parseInt(timeParts.hour);
@@ -649,27 +607,21 @@ Simple HTML/CSS/JavaScript clock with multiple time zones
                 time = `${String(displayHours).padStart(2, '0')}:${timeParts.minute}:${timeParts.second} ${meridiem}`;
             }
 
-            // Update digital time
             const timeElement = document.getElementById(`time-${index}`);
             if (timeElement) timeElement.textContent = time;
 
-            // Update date
             const dateElement = document.getElementById(`date-${index}`);
             if (dateElement) {
                 dateElement.textContent = `${timeParts.weekday}, ${timeParts.month} ${timeParts.day}, ${timeParts.year}`;
             }
 
-            // Update time details
             const detailsElement = document.getElementById(`details-${index}`);
             if (detailsElement) {
                 const zoneTime = new Date(now.toLocaleString('en-US', { timeZone: zone }));
                 const offset = (zoneTime - now) / 3600000;
-                detailsElement.innerHTML = `
-                    <div>UTC ${offset >= 0 ? '+' : ''}${offset.toFixed(1)}</div>
-                `;
+                detailsElement.innerHTML = `<div>UTC ${offset >= 0 ? '+' : ''}${offset.toFixed(1)}</div>`;
             }
 
-            // Update offset badge
             const offsetElement = document.getElementById(`offset-${index}`);
             if (offsetElement) {
                 const zoneTime = new Date(now.toLocaleString('en-US', { timeZone: zone }));
@@ -677,13 +629,11 @@ Simple HTML/CSS/JavaScript clock with multiple time zones
                 offsetElement.textContent = `UTC ${offset >= 0 ? '+' : ''}${offset.toFixed(1)}`;
             }
 
-            // Update analog clock if enabled
             if (showAnalog) {
                 updateAnalogClock(timeParts, index);
             }
         }
 
-        // Update analog clock
         function updateAnalogClock(timeParts, index) {
             const hours = parseInt(timeParts.hour) % 12;
             const minutes = parseInt(timeParts.minute);
@@ -693,32 +643,23 @@ Simple HTML/CSS/JavaScript clock with multiple time zones
             const minuteHand = document.getElementById(`minute-${index}`);
             const secondHand = document.getElementById(`second-${index}`);
 
-            if (hourHand) {
-                hourHand.style.transform = `rotate(${hours * 30 + minutes * 0.5}deg)`;
-            }
-            if (minuteHand) {
-                minuteHand.style.transform = `rotate(${minutes * 6 + seconds * 0.1}deg)`;
-            }
-            if (secondHand) {
-                secondHand.style.transform = `rotate(${seconds * 6}deg)`;
-            }
+            if (hourHand) hourHand.style.transform = `rotate(${hours * 30 + minutes * 0.5}deg)`;
+            if (minuteHand) minuteHand.style.transform = `rotate(${minutes * 6 + seconds * 0.1}deg)`;
+            if (secondHand) secondHand.style.transform = `rotate(${seconds * 6}deg)`;
         }
 
-        // Update last update time
         function updateLastUpdate() {
             const now = new Date();
             const time = now.toLocaleTimeString();
             document.getElementById('lastUpdate').textContent = time;
         }
 
-        // Set time format
         function setFormat(format) {
             timeFormat = format;
             document.querySelectorAll('.format-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
         }
 
-        // Add new clock
         function addNewClock() {
             const unselected = TIMEZONES.filter(tz => !selectedTimezones.includes(tz.zone));
             if (unselected.length > 0) {
@@ -730,7 +671,6 @@ Simple HTML/CSS/JavaScript clock with multiple time zones
             }
         }
 
-        // Remove clock
         function removeClock(zone) {
             const index = selectedTimezones.indexOf(zone);
             if (index > -1) {
@@ -740,13 +680,11 @@ Simple HTML/CSS/JavaScript clock with multiple time zones
             }
         }
 
-        // Toggle analog display
         function toggleAnalog() {
             showAnalog = !showAnalog;
             renderClocks();
         }
 
-        // Toggle fullscreen
         function toggleFullscreen() {
             const elem = document.documentElement;
             if (elem.requestFullscreen) {
@@ -756,14 +694,12 @@ Simple HTML/CSS/JavaScript clock with multiple time zones
             }
         }
 
-        // Reset to default clocks
         function resetClocks() {
             selectedTimezones = ['Asia/Kolkata', 'Europe/London', 'America/New_York'];
             renderTimezoneList();
             renderClocks();
         }
 
-        // Start the app
         init();
     </script>
 </body>
